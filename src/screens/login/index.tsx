@@ -1,5 +1,6 @@
 import React, { FormEvent, FormEventHandler, useState } from "react";
 import { request, setToken } from "../../utils/request";
+import { User } from "../project-list/search-pannel";
 interface loginProps {
   user: {
     token: string;
@@ -7,9 +8,9 @@ interface loginProps {
 }
 export const LoginScreens = () => {
   const login = (params: { username: string; password: string }) => {
-    request(`/register`, { method: "POST", data: params }).then(
+    request(`/register`, params, { method: "POST" }).then(
       (res) => {
-        setToken(res.user.token);
+        setToken((res as loginProps).user.token);
       }
     );
   };

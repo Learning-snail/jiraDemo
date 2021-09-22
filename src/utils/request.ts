@@ -1,4 +1,4 @@
-import { cleanObject } from "./index";
+import { cleanObject, cleanObjectProps } from "./index";
 import * as qs from "qs";
 const apiURL = process.env.REACT_APP_API_URL;
 const localStorageKey = '__auth_provider_token__';
@@ -6,18 +6,21 @@ interface optionsProps {
   method: string;
   data?: object;
   body?: string;
-  headers?:string[][]
+  headers?:HeadersInit
 }
 export const request = (
   url: string,
+  data?:cleanObjectProps,
   options: optionsProps = { method: "GET" }
-):Promise<object> => {
+) => {
   let postURL = `${apiURL}${url}`;
   if (options.method === "GET") {
-    postURL += `?${qs.stringify(cleanObject(options.data))}`;
+    postURL += `?${qs.stringify(cleanObject(data))}`;
   } else {
-    options.body = JSON.stringify(options.data);
-    options.headers = [["Content-Type","application/json"]]
+    options.body = JSON.stringify(data);
+    options.headers = {
+      "Content-Type":"application/json"
+    }
   }
   return new Promise((resolve, reject) => {
     fetch(postURL, options).then(async (res) => {

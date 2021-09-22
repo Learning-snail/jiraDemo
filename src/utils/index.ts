@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-
+export interface cleanObjectProps {
+  [prop : string] : string | number | cleanObjectProps
+}
 export const isFalse = (value: unknown) => (value === 0 ? true : !!value);
-export const cleanObject = (obj?:object) => {
+export const cleanObject =(obj?:cleanObjectProps) => {
     if (!obj) return; 
-  const result = {};
+  const result:cleanObjectProps = {};
   
   for (const key in obj) {
-      // @ts-ignore
     if (isFalse(obj[key])) {
-        // @ts-ignore
       result[key] = obj[key];
     }
   }
