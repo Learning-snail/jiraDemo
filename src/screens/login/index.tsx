@@ -6,6 +6,7 @@ interface loginProps {
     token: string;
   };
 }
+
 export const LoginScreens = () => {
   const login = (params: { username: string; password: string }) => {
     request(`/register`, params, { method: "POST" }).then(
