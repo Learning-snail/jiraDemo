@@ -8,6 +8,7 @@ export const cleanObject =(obj?:cleanObjectProps) => {
   const result:cleanObjectProps = {};
   
   for (const key in obj) {
+    
     if (isFalse(obj[key])) {
       result[key] = obj[key];
     }

@@ -2,6 +2,7 @@ import { cleanObject, cleanObjectProps } from "./index";
 import * as qs from "qs";
 const apiURL = process.env.REACT_APP_API_URL;
 const localStorageKey = '__auth_provider_token__';
+
 interface optionsProps {
   method: string;
   data?: object;

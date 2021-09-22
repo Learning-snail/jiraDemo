@@ -4,6 +4,7 @@ export interface User {
   name:string;
   token:string
 }
+
 interface SearchPannelProps{
   param:{
     name:string;
