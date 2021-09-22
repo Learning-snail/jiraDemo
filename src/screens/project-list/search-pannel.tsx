@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 export interface User {
   id:number;
-  name:string
+  name:string;
+  token:string
 }
 interface SearchPannelProps{
   param:{
