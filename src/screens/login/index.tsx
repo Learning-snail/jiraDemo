@@ -1,4 +1,5 @@
 import React, { FormEvent, FormEventHandler, useState } from "react";
+import { useAuth } from "../../context/auth-context";
 import { request, setToken } from "../../utils/request";
 import { User } from "../project-list/search-pannel";
 interface loginProps {
@@ -8,13 +9,9 @@ interface loginProps {
 }
 
 export const LoginScreens = () => {
-  const login = (params: { username: string; password: string }) => {
-    request(`/register`, params, { method: "POST" }).then(
-      (res) => {
-        setToken((res as loginProps).user.token);
-      }
-    );
-  };
+  let {login,user} = useAuth()
+  console.log(user);
+  
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = (e.currentTarget.elements[0] as HTMLInputElement).value;
