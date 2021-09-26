@@ -14,6 +14,15 @@ interface loginProps {
     token: string;
   };
 }
+export const getToken = () => {
+  return localStorage.getItem(localStorageKey);
+};
+
+export const setToken = (token: string) => {
+  localStorage.setItem(localStorageKey, token || "");
+};
+export const logout = async () =>
+  localStorage.removeItem(localStorageKey);
 export const request = (
   url: string,
   data?: cleanObjectProps,
@@ -28,8 +37,14 @@ export const request = (
       "Content-Type": "application/json",
     };
   }
+  let token = getToken();
+  if (token) {
+    options.headers = {
+      'Authorization':`Bearer ${token}`
+    }
+  }
   return new Promise((resolve, reject) => {
-    fetch(postURL, options).then(async (res) => {
+    return fetch(postURL, options).then(async (res) => {
       if (res.ok) {
         resolve(await res.json());
       } else {
@@ -37,14 +52,6 @@ export const request = (
       }
     });
   });
-};
-
-export const getToken = () => {
-  return localStorage.getItem(localStorageKey);
-};
-
-export const setToken = (token: string) => {
-  localStorage.setItem(localStorageKey, token || "");
 };
 export const login = (params: { username: string; password: string }) => {
   return request(`/login`, params, { method: "POST" }).then((res) => {
@@ -58,3 +65,4 @@ export const register = (params: { username: string; password: string }) => {
     return res
   });
 };
+

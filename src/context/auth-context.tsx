@@ -1,11 +1,25 @@
 import React, { ReactNode, useState } from 'react';
 import { Interface } from 'readline';
 import { User } from '../screens/project-list/search-pannel';
-import * as auth from '../utils/request'
+import { useMount } from '../utils';
+import * as auth from '../utils/request';
+interface bootstrapUserProp {
+    user: object
+}
+const bootstrapUser = async () => {
+    let user = null
+    let token = auth.getToken()
+    if(token) {
+        const data =  await auth.request('/me')
+        user = (data as bootstrapUserProp).user
+    }
+    return user
+}
 const AuthContext = React.createContext<{
     user: User | null;
     login: (params: AuthForm) => Promise<void>;
     register: (params: AuthForm) => Promise<void>;
+    logout: () => void;
 } | undefined>(undefined)
 interface AuthForm{
     username: string;
@@ -19,8 +33,14 @@ export const AuthProvider = ({children}:{children:ReactNode}) => {
     const register = (params:AuthForm) => auth.register(params).then((res)=>{
         setUser(res as User)
     })
+    const logout = () => auth.logout().then(res=>{
+        setUser(null)
+    })
+    useMount(()=>{
+        bootstrapUser().then((res) => setUser(res as User))
+    })
     return (
-        <AuthContext.Provider value={{user,login,register}} children={children} />
+        <AuthContext.Provider value={{user,login,register,logout}} children={children} />
     )
 }
 export const useAuth = ()=>{
