@@ -1,19 +1,20 @@
 import React, { ReactNode, useState } from 'react';
-import { Interface } from 'readline';
 import { User } from '../screens/project-list/search-pannel';
 import { useMount } from '../utils';
 import * as auth from '../utils/request';
+import { useAsync } from '../utils/use-async';
+import { FullPageErrorFallback, FullPageLoading } from "../components/lib";
 interface bootstrapUserProp {
     user: object
 }
-const bootstrapUser = async () => {
-    let user = null
+const bootstrapUser = async ():Promise<User | null> => {
+    let user  = null
     let token = auth.getToken()
     if(token) {
         const data =  await auth.request('/me')
         user = (data as bootstrapUserProp).user
     }
-    return user
+    return user as User
 }
 const AuthContext = React.createContext<{
     user: User | null;
@@ -26,7 +27,15 @@ interface AuthForm{
     password: string
 }
 export const AuthProvider = ({children}:{children:ReactNode}) => {
-    const [user , setUser] = useState<User | null>(null)
+    const {
+        data: user,
+        error,
+        isLoading,
+        isIdle,
+        isError,
+        run,
+        setData: setUser,
+      } = useAsync<User | null>();
     const login = (params:AuthForm) => auth.login(params).then((res)=>{
         setUser(res as User)
     })
@@ -36,9 +45,17 @@ export const AuthProvider = ({children}:{children:ReactNode}) => {
     const logout = () => auth.logout().then(res=>{
         setUser(null)
     })
-    useMount(()=>{
-        bootstrapUser().then((res) => setUser(res as User))
-    })
+    useMount(() => {
+        run(bootstrapUser());
+      });
+    
+      if (isIdle || isLoading) {
+        return <FullPageLoading />;
+      }
+    
+      if (isError) {
+        return <FullPageErrorFallback error={error} />;
+      }
     return (
         <AuthContext.Provider value={{user,login,register,logout}} children={children} />
     )

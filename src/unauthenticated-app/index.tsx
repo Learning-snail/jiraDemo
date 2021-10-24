@@ -1,31 +1,33 @@
-import { Card, Divider,Button } from "antd";
+import { Card, Divider, Button, Typography } from "antd";
 import React, { useState } from "react";
 import { LoginScreens } from "./login";
 import { RegisterScreens } from "./register";
 import styled from "@emotion/styled";
-import logo from '../assets/logo.svg';
-import left from '../assets/left.svg';
-import right from '../assets/right.svg';
+import logo from "../assets/logo.svg";
+import left from "../assets/left.svg";
+import right from "../assets/right.svg";
 export const UnauthenticatedApp = () => {
   const [LoginStatus, setLoginStatus] = useState(true);
+  const [error, setError] = useState<Error|null>(null)
   return (
     <Container>
       <Header />
       <Background />
       <ShadowCard>
         <Title>{LoginStatus ? "请登录" : "请注册"}</Title>
-        {LoginStatus ? <LoginScreens /> : <RegisterScreens />}
+        {error?<Typography.Text type={'danger'}>{error.message}</Typography.Text>:null}
+        {LoginStatus ? <LoginScreens onError={setError}/> : <RegisterScreens onError={setError}/>}
         <Divider />
-        <a onClick={() => setLoginStatus(!LoginStatus)}>
+        <Button onClick={() => setLoginStatus(!LoginStatus)} type={"link"}>
           {LoginStatus ? "已经有账号了？直接登录" : "没有账号？注册新账号"}
-        </a>
+        </Button>
       </ShadowCard>
     </Container>
   );
 };
 export const LongButton = styled(Button)`
-  width:100%;
-`
+  width: 100%;
+`;
 const Title = styled.h2`
   margin-bottom: 2.4rem;
   color: rgb(94, 108, 132);
@@ -45,7 +47,7 @@ const Header = styled.header`
   background: url(${logo}) no-repeat center/ 8rem;
   padding: 5rem 0;
   width: 100%;
-`
+`;
 const ShadowCard = styled(Card)`
   width: 40rem;
   min-height: 56rem;

@@ -1,34 +1,32 @@
-import { List } from "./list";
+import { List, project } from "./list";
 import { SearchPannel } from "./search-pannel";
 import React, { useState, useEffect } from "react";
-import { request } from "../../utils/request";
 import {useMount,useDebounce} from '../../utils/index'
+import styled from "@emotion/styled";
+import { useProjects } from "../../utils/project";
+import { useUsers } from "../../utils/user";
 export const ProjectListScreen = () => {
   const [param, setParam] = useState<any>({
     name: "",
     personId: "",
   });
-  const [user, setUser] = useState<any>([]);
-  const [list, setList] = useState<any>([]);
   const usedebouncedParams = useDebounce(param ,1000)
-  useEffect(() => {
-    request(`/projects`, usedebouncedParams).then(async (res) => {
-      setList(res);
-    });
-  }, [usedebouncedParams]);
-  useMount(() => {
-    request(`/users`).then(async (res) => {
-      setUser(res);
-    });
-  });
+  const result = useProjects(usedebouncedParams)
+  const {isLoading,data:user} = useUsers()
   return (
-    <div>
+    <Container>
+      <h1>项目列表</h1>
       <SearchPannel
         param={param}
         setParam={setParam}
-        user={user}
+        user={user|| []}
       ></SearchPannel>
-      <List list={list} user={user}></List>
-    </div>
+      <List loading={isLoading} dataSource={result.data || []} user={user||[]}></List>
+    </Container>
   );
 };
+
+const Container = styled.div`
+padding: 3.2rem;
+width: 100%;
+`

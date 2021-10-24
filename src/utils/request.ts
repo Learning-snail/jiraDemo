@@ -23,11 +23,11 @@ export const setToken = (token: string) => {
 };
 export const logout = async () =>
   localStorage.removeItem(localStorageKey);
-export const request = (
+export const request = <T>(
   url: string,
   data?: cleanObjectProps,
   options: optionsProps = { method: "GET" }
-) => {
+):Promise<T> => {
   let postURL = `${apiURL}${url}`;
   if (options.method === "GET") {
     postURL += `?${qs.stringify(cleanObject(data))}`;
@@ -48,7 +48,7 @@ export const request = (
       if (res.ok) {
         resolve(await res.json());
       } else {
-        reject(res);
+        reject(await res.json());
       }
     });
   });
@@ -57,12 +57,17 @@ export const login = (params: { username: string; password: string }) => {
   return request(`/login`, params, { method: "POST" }).then((res) => {
     setToken((res as loginProps).user.token);
     return res
+  }).catch(err=>{
+    console.log(err,'err');
+    return Promise.reject(err)
   });
 };
 export const register = (params: { username: string; password: string }) => {
   return request(`/register`, params, { method: "POST" }).then((res) => {
     setToken((res as loginProps).user.token);
     return res
+  }).catch(err=>{
+    return Promise.reject(err)
   });
 };
 
