@@ -2,6 +2,7 @@ import { Table, TableProps } from "antd";
 import React from "react";
 import { User } from "./search-pannel";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 export interface project {
   id: number;
   name: string;
@@ -17,17 +18,24 @@ export const List = ({ user,...props }: ListProps) => {
   return (
     <Table
       pagination={false}
+      rowKey={"id"}
       columns={[
         {
           title: "名称",
-          dataIndex: "name",
+          render(val,project) {
+            return (
+              <Link to={String(project.id)}>{project.name}</Link>
+            )
+          }
         },
         {
           title: "部门",
           dataIndex: "organization",
+          key: 'organization',
         },
         {
           title: "负责人",
+          key: 'personId',
           render(value, project) {
             return (
               <span>
@@ -38,6 +46,7 @@ export const List = ({ user,...props }: ListProps) => {
         },
         {
           title: "创建时间",
+          key: 'time',
           render(value, project) {
             return (
               <span>
