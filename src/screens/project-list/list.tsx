@@ -24,7 +24,7 @@ export const List = ({ user,...props }: ListProps) => {
           title: "名称",
           render(val,project) {
             return (
-              <Link to={String(project.id)}>{project.name}</Link>
+              <Link to={`/projects/${String(project.id)}`}>{project.name}</Link>
             )
           }
         },

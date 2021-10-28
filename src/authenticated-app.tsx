@@ -5,19 +5,21 @@ import { ReactComponent as SoftwareLogo } from "./assets/software-logo.svg";
 import styled from "@emotion/styled";
 import { Row } from "./components/lib";
 import { Button, Dropdown, Menu } from "antd";
-import { BrowserRouter as Router} from "react-router-dom";
-import {Route, Routes} from 'react-router'
+import { BrowserRouter as Router,Redirect} from "react-router-dom";
+import {Route,Switch} from 'react-router'
 import { ProjectScreen } from "./screens/project";
+import { resetRoute } from "./utils";
 export const AuthenticatedApp = () => {
   return (
     <Container>
       <PageHeader />
       <Main>
         <Router>
-          <Routes>
-            <Route path={'/projects'} element={<ProjectListScreen />}></Route>
-            <Route path={'/projects/:projectId/*'} element={<ProjectScreen />}></Route>
-          </Routes>
+          <Switch>
+            <Route exact path={'/projects'} component={ProjectListScreen} />
+            <Route path={'/projects/:id'} component={ProjectScreen} />
+            <Redirect to={'/projects'}/>
+          </Switch>
         </Router>
       </Main>
     </Container>
@@ -26,7 +28,9 @@ export const AuthenticatedApp = () => {
 const PageHeader = () => {
   return ( <Header between={true}>
     <HeaderLeft gap={true}>
-      <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
+      <Button type={'link'} onClick={resetRoute}>
+        <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
+      </Button>
       <h2>项目</h2>
       <h2>用户</h2>
     </HeaderLeft>
@@ -71,8 +75,6 @@ const Header = styled(Row)`
 const HeaderLeft = styled(Row)``;
 const HeaderRight = styled.div``;
 const Main = styled.main`
-  display: flex;
   overflow: hidden;
   width: 100%;
-  justify-content: center;
 `;
