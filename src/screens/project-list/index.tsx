@@ -1,19 +1,15 @@
 import { List, project } from "./list";
 import { SearchPannel } from "./search-pannel";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {useMount,useDebounce, useDocumentTitle} from '../../utils/index'
 import styled from "@emotion/styled";
 import { useProjects } from "../../utils/project";
 import { useUsers } from "../../utils/user";
-import { useUrlQueryParam } from "../../utils/url";
+import { useProjectsSearchParams } from "./util";
 export const ProjectListScreen = () => {
-  const [,setParam] = useState<any>({
-    name: "",
-    personId: "",
-  });
+  const [param,setParam] = useProjectsSearchParams()
   const [keys,setKeys] = useState<('name'|'personId')[]>(['name','personId'])
-  const [param] = useUrlQueryParam(keys)
-  const usedebouncedParams = useDebounce(param ,1000)
+  const usedebouncedParams = useDebounce(param ,200)
   const result = useProjects(usedebouncedParams)
   const {isLoading,data:user} = useUsers()
   useDocumentTitle('项目列表')

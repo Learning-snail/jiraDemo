@@ -4,6 +4,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   const { search } = useLocation();
   const paramsString = search.substring(1);
   const [searchParams] = useState(new URLSearchParams(paramsString));
+  
   return [
     useMemo(
       () =>
@@ -12,6 +13,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
         }, {} as { [key in K]: string }),
       [searchParams,keys]
     ),
-    searchParams,
-  ] as const;
+    (key:K,value:string) => searchParams.set(key ,value),
+  ] as const
 };
+

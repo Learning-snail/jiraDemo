@@ -1,5 +1,6 @@
 import { Input, Select, Form } from "antd";
 import React from "react";
+import { project } from "./list";
 export interface User {
   id: number;
   name: string;
@@ -7,10 +8,7 @@ export interface User {
 }
 
 interface SearchPannelProps {
-  param: {
-    name: string;
-    personId: string;
-  };
+  param: Pick<project,'personId' | 'name'>;
   setParam: (param: SearchPannelProps["param"]) => void;
   user: User[];
 }
@@ -41,7 +39,7 @@ export const SearchPannel = ({ param, setParam, user }: SearchPannelProps) => {
             });
           }}
         >
-          <Select.Option value="">负责人</Select.Option>
+          <Select.Option value={0}>负责人</Select.Option>
           {user.map((user) => (
             <Select.Option value={user.id} key={user.id}>
               {user.name}

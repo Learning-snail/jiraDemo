@@ -29,8 +29,10 @@ export const request = <T>(
   options: optionsProps = { method: "GET" }
 ):Promise<T> => {
   let postURL = `${apiURL}${url}`;
+  
   if (options.method === "GET") {
-    postURL += `?${qs.stringify(cleanObject(data))}`;
+    let param = qs.stringify(cleanObject(data));
+    postURL += param && `?${qs.stringify(cleanObject(data))}`;
   } else {
     options.body = JSON.stringify(data);
     options.headers = {
