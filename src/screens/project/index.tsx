@@ -13,8 +13,6 @@ const Black = () => {
     )
 }
 export const ProjectScreen = (props: RouteComponentProps<MatchParams>) => {
-    console.log(props.match.params.id);
-    
   return (
     <div>
       <h3>ProjectScreen</h3>

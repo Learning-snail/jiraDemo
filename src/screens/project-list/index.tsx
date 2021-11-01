@@ -5,11 +5,14 @@ import {useMount,useDebounce, useDocumentTitle} from '../../utils/index'
 import styled from "@emotion/styled";
 import { useProjects } from "../../utils/project";
 import { useUsers } from "../../utils/user";
+import { useUrlQueryParam } from "../../utils/url";
 export const ProjectListScreen = () => {
-  const [param, setParam] = useState<any>({
+  const [,setParam] = useState<any>({
     name: "",
     personId: "",
   });
+  const [keys,setKeys] = useState<('name'|'personId')[]>(['name','personId'])
+  const [param] = useUrlQueryParam(keys)
   const usedebouncedParams = useDebounce(param ,1000)
   const result = useProjects(usedebouncedParams)
   const {isLoading,data:user} = useUsers()

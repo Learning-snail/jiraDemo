@@ -1,5 +1,6 @@
 import React from 'react';
-export const KanbanScreen =() => {
+import { useUrlQueryParam } from '../../utils/url';
+export const KanbanScreen =() => {  
     return (
         <div>kanban</div>
     )
